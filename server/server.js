@@ -2,8 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 
-import routesLogger from "./middleware/requestLogger";
-import logRoutes from "./routes/logRoutes";
+import routesLogger from "./middleware/requestLogger.js";
+import logRoutes from "./routes/logRoutes.js";
 
 const app = express();
 
