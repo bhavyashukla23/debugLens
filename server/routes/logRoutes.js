@@ -1,38 +1,9 @@
-import express from "express"
-import Log from "../models/logModel.js"
-import axios from "axios"
+import express from "express";
+import { getLogs, replayRequest } from "../controllers/logController.js";
 
-const router = express.Router()
+const router = express.Router();
 
-// Get all logs
-router.get("/", async (req, res) => {
-  try {
-    const logs = await Log.find().sort({ timestamp: -1 })
-    res.json(logs)
-  } catch (err) {
-    res.status(500).json({ error: err.message })
-  }
-})
-
-// Replay request by log ID
-router.post("/replay/:id", async (req, res) => {
-  try {
-    const log = await Log.findById(req.params.id)
-
-    if (!log) {
-      return res.status(404).json({ message: "Log not found" })
-    }
-
-    const response = await axios({
-      method: log.method,
-      url: `http://localhost:5000${log.endpoint}`,
-      data: log.requestBody
-    })
-
-    res.json(response.data)
-  } catch (err) {
-    res.status(500).json({ error: err.message })
-  }
-})
+router.get("/", getLogs);
+router.post("/replay/:id", replayRequest);
 
 export default router;
